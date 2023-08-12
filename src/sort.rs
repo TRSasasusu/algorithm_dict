@@ -1,8 +1,33 @@
 use std::collections::VecDeque;
+use pyo3::exceptions::PyTypeError;
 use pyo3::prelude::*;
 
 #[pyfunction]
-pub fn bubble_sort(mut vec: Vec<i64>) -> PyResult<Vec<i64>> {
+pub fn bubble_sort(mut vec: PyObject) -> PyResult<PyObject> {
+    let gil = Python::acquire_gil();
+    let py = gil.python();
+    if let Ok(vec) = vec.extract::<Vec<i64>>(py) {
+        return Ok(_bubble_sort(vec).to_object(py));
+    }
+    else if let Ok(vec) = vec.extract::<Vec<f64>>(py) {
+        return Ok(_bubble_sort(vec).to_object(py));
+    }
+    Err(PyTypeError::new_err("Not supported"))
+//    let vec: Vec<i64> = vec.extract()?;
+//    Ok(PyCell::new(py, _bubble_sort(vec)).unwrap())
+//    if let Ok(i_vec) = vec.extract() {
+//    //if let Ok(i_vec) = vec.cast_as::<Vec<i64>>() {
+//        return _bubble_sort(i_vec);
+//    }
+//    else if let Ok(f_vec) = vec.cast_as::<Vec<f64>>() {
+//        return _bubble_sort(f_vec);
+//    }
+//    return TypeError::into("hgoe");
+}
+
+//#[pyfunction]
+pub fn _bubble_sort<T: Copy + PartialOrd>(mut vec: Vec<T>) -> Vec<T> {
+//pub fn bubble_sort(mut vec: Vec<i64>) -> PyResult<Vec<i64>> {
     for i in 0..vec.len()-1 {
         for j in i..vec.len() {
             if vec[i] > vec[j] {
@@ -13,7 +38,7 @@ pub fn bubble_sort(mut vec: Vec<i64>) -> PyResult<Vec<i64>> {
         }
     }
 
-    Ok(vec)
+    vec
 }
 
 #[pyfunction]
