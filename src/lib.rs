@@ -110,7 +110,7 @@ fn quick_sort(mut vec: Vec<i64>) -> PyResult<Vec<i64>> {
         let mut right = range.end - 1;
         loop {
             let mut goto_next_queue = false;
-            if vec[left] > pivot {
+            if vec[left] >= pivot {
                 loop {
                     if vec[right] <= pivot {
                         let tmp = vec[left];
@@ -141,7 +141,7 @@ fn quick_sort(mut vec: Vec<i64>) -> PyResult<Vec<i64>> {
         if range.end - right >= 2 {
             queue.push_front(BeginEnd { begin: right, end: range.end });
         }
-        //println!("from {} to {}: {:?}", range.begin, range.end, vec);
+        println!("from {} to {}: {:?}", range.begin, range.end, vec);
     }
 
     Ok(vec)
