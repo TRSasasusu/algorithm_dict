@@ -13,3 +13,19 @@ def test_sort():
     assert sorted_l == selection_sort(l)
     assert sorted_l == merge_sort(l)
     assert sorted_l == quick_sort(l)
+
+    l = [0.53, -0.83, 0.1234, 24, -56, 12, 1, 1]
+    sorted_l = sorted(l)
+
+    assert sorted_l == bubble_sort(l)
+    assert sorted_l == selection_sort(l)
+    assert sorted_l == merge_sort(l)
+    assert sorted_l == quick_sort(l)
+
+    l = 'hgrwoghoqgqpoh204hru'
+    sorted_l = ''.join(sorted(l))
+
+    assert sorted_l == bubble_sort(l)
+    assert sorted_l == selection_sort(l)
+    assert sorted_l == merge_sort(l)
+    assert sorted_l == quick_sort(l)
