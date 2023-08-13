@@ -2,32 +2,36 @@ use std::collections::VecDeque;
 use pyo3::exceptions::PyTypeError;
 use pyo3::prelude::*;
 
-#[pyfunction]
-pub fn bubble_sort(mut vec: PyObject) -> PyResult<PyObject> {
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    if let Ok(vec) = vec.extract::<Vec<i64>>(py) {
-        return Ok(_bubble_sort(vec).to_object(py));
-    }
-    else if let Ok(vec) = vec.extract::<Vec<f64>>(py) {
-        return Ok(_bubble_sort(vec).to_object(py));
-    }
-    Err(PyTypeError::new_err("Not supported"))
-//    let vec: Vec<i64> = vec.extract()?;
-//    Ok(PyCell::new(py, _bubble_sort(vec)).unwrap())
-//    if let Ok(i_vec) = vec.extract() {
-//    //if let Ok(i_vec) = vec.cast_as::<Vec<i64>>() {
-//        return _bubble_sort(i_vec);
-//    }
-//    else if let Ok(f_vec) = vec.cast_as::<Vec<f64>>() {
-//        return _bubble_sort(f_vec);
-//    }
-//    return TypeError::into("hgoe");
+//fn _call_general_sort<F: Fn<T: Copy + PartialOrd>>(f: F, vec: PyObject) -> PyResult<PyObject> {
+//fn _call_general_sort<F>(f: F, vec: PyObject) where F: Fn(fn()) -> PyResult<PyObject> {
+//_call_each_type_sort<Fi: Fn(Vec<i64>), Ff: Fn(Vec<f64>), Fu8: Fn(<Vec<u8>>)>(fi: Fi, ff: Ff, fu8: Fu8) -> PyResult<PyObject> {
+fn _call_each_type_sort(fi: fn(&mut [i64]), ff: fn(&mut [f64]), fu8: fn(&mut [u8]), vec: PyObject) -> PyResult<PyObject> {
+    Python::with_gil(|py| {
+        if let Ok(mut vec) = vec.extract::<Vec<i64>>(py) {
+            fi(&mut vec);
+            return Ok(vec.to_object(py));
+        }
+        else if let Ok(mut vec) = vec.extract::<Vec<f64>>(py) {
+            ff(&mut vec);
+            return Ok(vec.to_object(py));
+        }
+        else if let Ok(vec) = vec.extract::<String>(py) {
+            let mut vec = vec.into_bytes();
+            fu8(&mut vec);
+            return Ok(String::from_utf8(vec).unwrap().to_object(py));
+            //return Ok(String::from_utf8(fu8(vec.into_bytes())).unwrap().to_object(py));
+        }
+        Err(PyTypeError::new_err("Not supported"))
+    })
 }
 
-//#[pyfunction]
-pub fn _bubble_sort<T: Copy + PartialOrd>(mut vec: Vec<T>) -> Vec<T> {
-//pub fn bubble_sort(mut vec: Vec<i64>) -> PyResult<Vec<i64>> {
+#[pyfunction]
+pub fn bubble_sort(vec: PyObject) -> PyResult<PyObject> {
+    _call_each_type_sort(_bubble_sort::<i64>, _bubble_sort::<f64>, _bubble_sort::<u8>, vec)
+}
+
+//fn _bubble_sort<T: Copy + PartialOrd>(mut vec: Vec<T>) -> Vec<T> {
+fn _bubble_sort<T: Copy + PartialOrd>(vec: &mut [T]) {
     for i in 0..vec.len()-1 {
         for j in i..vec.len() {
             if vec[i] > vec[j] {
@@ -37,11 +41,15 @@ pub fn _bubble_sort<T: Copy + PartialOrd>(mut vec: Vec<T>) -> Vec<T> {
             }
         }
     }
-
-    vec
 }
 
 #[pyfunction]
+//pub fn selection_sort(vec: PyObject) -> PyResult<PyObject> {
+//    Python::with_gil(|py| {
+//        _call_general_sort(_bubble_sort)
+//    })
+//}
+//
 pub fn selection_sort(mut vec: Vec<i64>) -> PyResult<Vec<i64>> {
     for i in 0..vec.len()-1 {
         let mut min_index: usize = i;
