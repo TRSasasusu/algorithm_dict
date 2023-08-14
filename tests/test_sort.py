@@ -1,3 +1,5 @@
+import numpy as np
+
 from algorithm_dict import (
     bubble_sort,
     selection_sort,
@@ -24,6 +26,14 @@ def test_sort():
 
     l = 'hgrwoghoqgqpoh204hru'
     sorted_l = ''.join(sorted(l))
+
+    assert sorted_l == bubble_sort(l)
+    assert sorted_l == selection_sort(l)
+    assert sorted_l == merge_sort(l)
+    assert sorted_l == quick_sort(l)
+
+    l = np.array([5, -1, 3, 0, 4, 3])
+    sorted_l = sorted(l)
 
     assert sorted_l == bubble_sort(l)
     assert sorted_l == selection_sort(l)
