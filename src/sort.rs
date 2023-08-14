@@ -17,7 +17,7 @@ fn _call_each_type_sort(fi: fn(&mut [i64]), ff: fn(&mut [f64]), fu8: fn(&mut [u8
             fu8(&mut vec);
             return Ok(String::from_utf8(vec).unwrap().to_object(py));
         }
-        Err(PyTypeError::new_err("Not supported"))
+        Err(PyTypeError::new_err("Not supported type"))
     })
 }
 
