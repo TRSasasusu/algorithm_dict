@@ -14,8 +14,8 @@ pub fn dijkstra(mat: PyObject, start_index: usize, end_index: usize) -> PyResult
     })
 }
 
-//fn _dijkstra<T: Copy + PartialOrd + std::ops::Add<Output=T>>(mat: &Vec<Vec<T>>, start_index: usize, end_index: usize, zero_weight: T) -> Vec<usize> {
-fn _dijkstra<T: Copy + PartialOrd + std::ops::Add<Output=T> + std::fmt::Display>(mat: &Vec<Vec<T>>, start_index: usize, end_index: usize, zero_weight: T) -> Vec<usize> {
+fn _dijkstra<T: Copy + PartialOrd + std::ops::Add<Output=T>>(mat: &Vec<Vec<T>>, start_index: usize, end_index: usize, zero_weight: T) -> Vec<usize> {
+//fn _dijkstra<T: Copy + PartialOrd + std::ops::Add<Output=T> + std::fmt::Display>(mat: &Vec<Vec<T>>, start_index: usize, end_index: usize, zero_weight: T) -> Vec<usize> {
     assert!(mat.len() == mat[0].len());
 
     let mut d_v = Vec::with_capacity(mat.len());
@@ -57,8 +57,8 @@ fn _dijkstra<T: Copy + PartialOrd + std::ops::Add<Output=T> + std::fmt::Display>
         }
         q.remove(min_v_index_of_q);
         let min_d_v = min_d_v.unwrap();
-        println!("q: {:?}", q);
-        println!("min_v: {}, min_d_v: {}", min_v, min_d_v);
+        //println!("q: {:?}", q);
+        //println!("min_v: {}, min_d_v: {}", min_v, min_d_v);
 
         for (v, weight) in mat[min_v].iter().enumerate() {
             if *weight == zero_weight {
@@ -73,7 +73,7 @@ fn _dijkstra<T: Copy + PartialOrd + std::ops::Add<Output=T> + std::fmt::Display>
             else {
                 d_v[v] = Some(min_d_v + *weight);
                 prev_v[v] = Some(min_v);
-                println!("updated d_v");
+                //println!("updated d_v");
             }
         }
     }
