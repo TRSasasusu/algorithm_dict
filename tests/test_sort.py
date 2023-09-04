@@ -1,6 +1,6 @@
 import numpy as np
 
-from algorithm_dict import (
+from algorithm_dict.sort import (
     bubble_sort,
     selection_sort,
     merge_sort,

@@ -1,4 +1,4 @@
-from algorithm_dict import dijkstra
+from algorithm_dict.graph import dijkstra
 
 def test_dijkstra():
     mat = [

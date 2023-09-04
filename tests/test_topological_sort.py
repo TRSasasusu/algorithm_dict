@@ -1,4 +1,4 @@
-from algorithm_dict import topological_sort
+from algorithm_dict.graph import topological_sort
 
 def test_topological_sort():
     mat = [
